@@ -1,0 +1,13 @@
+{:paths ["src"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
+ :mvn/repos
+ {"central" {:url "https://repo1.maven.org/maven2/"}
+  "clojars" {:url "https://clojars.org/repo"}}
+ :aliases {:server {:main-opts ["-m" "beatme.main"]}
+           :repl {}
+           :test {:extra-paths ["test"]
+                  :extra-deps {lambdaisland/kaocha {:mvn/version "1.60.945"}}
+                  :main-opts ["-m" "kaocha.runner" "unit"]}
+           :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "RELEASE"}}
+                      :main-opts ["-m" "antq.core"]
+                      :jvm-opts ["-Dlogback.configurationFile=config/logback.xml"]}}}
