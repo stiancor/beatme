@@ -1,9 +1,9 @@
 (ns beatme.board-test
   (:require [clojure.test :refer :all])
-  (:require [beatme.board :refer [define-board]]))
+  (:require [beatme.board :as board]))
 
 (deftest define-board-test
-  (let [board (define-board)]
+  (let [board (board/create-empty)]
     (testing "is 8 by 8 matrix"
       (is (= 8 (count board)))
       (doall
@@ -22,3 +22,17 @@
       (let [posx5y6 (get-in board [5 6])]
         (is (= (:x posx5y6) 6))
         (is (= (:y posx5y6) "G"))))))
+
+(deftest check-if-position-inside-board
+  (let [board (board/create-empty)]
+    (is (board/is-inside-board? [0 0] board))
+    (is (board/is-inside-board? [7 7] board))
+    (is (board/is-inside-board? [0 7] board))
+    (is (board/is-inside-board? [7 0] board))
+    (is (board/is-inside-board? [3 3] board))
+    (is (board/is-inside-board? [5 6] board))
+    (is (not (board/is-inside-board? [0 8] board)))
+    (is (not (board/is-inside-board? [8 0] board)))
+    (is (not (board/is-inside-board? [-1 0] board)))
+    (is (not (board/is-inside-board? [0 -1] board)))
+    (is (not (board/is-inside-board? [7 15] board)))))
