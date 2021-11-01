@@ -17,5 +17,14 @@
 (defn square-occupied? [board position]
   (get-in board (conj position :piece)))
 
-(defn add-piece [board position piece]
+(defn get-piece [board position]
+  (get-in board (conj position :piece)))
+
+(defn set-piece [board position piece]
   (assoc-in board (conj position :piece) piece))
+
+(defn move-piece [board old-pos new-pos]
+  (let [piece (get-in board (conj old-pos :piece))]
+    (-> board
+        (update-in old-pos dissoc :piece)
+        (assoc-in (conj new-pos :piece) piece))))

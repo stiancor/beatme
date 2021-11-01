@@ -37,6 +37,14 @@
   (is (not (board/is-inside-board? [7 15]))))
 
 (deftest check-square-occupied
-  (let [board (board/add-piece (board/create-empty) [0 3] :pawn)]
-    (is (board/square-occupied? board [0 3]))
-    (is (not (board/square-occupied? board [0 2])))))
+  (let [board-before (board/set-piece (board/create-empty) [0 2] {:type :pawn
+                                                                  :color :white})]
+    (testing "Check before moving piece"
+      (is (board/square-occupied? board-before [0 2]))
+      (is (nil? (board/square-occupied? board-before [0 3]))))
+    (testing "After moving piece"
+      (let [board-after (board/move-piece board-before [0 2] [0 3])]
+        (is (nil? (board/square-occupied? board-after [0 2])))
+        (is (board/square-occupied? board-after [0 3]))
+        (is (= (board/get-piece board-before [0 2])
+               (board/get-piece board-after [0 3])))))))
