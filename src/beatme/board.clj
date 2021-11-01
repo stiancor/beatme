@@ -14,11 +14,15 @@
     (and (>= x 0) (< x 8)
          (>= y 0) (< y 8))))
 
-(defn square-occupied? [board position]
-  (get-in board (conj position :piece)))
-
 (defn get-piece [board position]
   (get-in board (conj position :piece)))
+
+(defn square-occupied? [board position]
+  (get-piece board position))
+
+(defn square-occupied-by-opponent? [board position player-color]
+  (when-let [piece (square-occupied? board position)]
+    (not= player-color (:color piece))))
 
 (defn set-piece [board position piece]
   (assoc-in board (conj position :piece) piece))
