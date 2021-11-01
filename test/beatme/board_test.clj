@@ -24,18 +24,17 @@
         (is (= (:y posx5y6) "G"))))))
 
 (deftest check-if-position-inside-board
-  (let [board (board/create-empty)]
-    (is (board/is-inside-board? board [0 0]))
-    (is (board/is-inside-board? board [7 7]))
-    (is (board/is-inside-board? board [0 7]))
-    (is (board/is-inside-board? board [7 0]))
-    (is (board/is-inside-board? board [3 3]))
-    (is (board/is-inside-board? board [5 6]))
-    (is (not (board/is-inside-board? board [0 8])))
-    (is (not (board/is-inside-board? board [8 0])))
-    (is (not (board/is-inside-board? board [-1 0])))
-    (is (not (board/is-inside-board? board [0 -1])))
-    (is (not (board/is-inside-board? board [7 15])))))
+  (is (board/is-inside-board? [0 0]))
+  (is (board/is-inside-board? [7 7]))
+  (is (board/is-inside-board? [0 7]))
+  (is (board/is-inside-board? [7 0]))
+  (is (board/is-inside-board? [3 3]))
+  (is (board/is-inside-board? [5 6]))
+  (is (not (board/is-inside-board? [0 8])))
+  (is (not (board/is-inside-board? [8 0])))
+  (is (not (board/is-inside-board? [-1 0])))
+  (is (not (board/is-inside-board? [0 -1])))
+  (is (not (board/is-inside-board? [7 15]))))
 
 (deftest check-square-occupied
   (let [board (board/add-piece (board/create-empty) [0 3] :pawn)]
