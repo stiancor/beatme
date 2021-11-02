@@ -16,7 +16,7 @@ on how to create your own chess bot.
 The code is written in Clojure. It you haven't installed it already, then do so.
 On a Mac just run
 
-`brew install clojure`
+`brew install clojure/tools/clojure`
 
 and then run  
 
