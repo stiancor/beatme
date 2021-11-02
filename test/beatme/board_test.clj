@@ -48,3 +48,13 @@
         (is (board/square-occupied? board-after [0 3]))
         (is (= (board/get-piece board-before [0 2])
                (board/get-piece board-after [0 3])))))))
+
+(deftest test-flip-board []
+  (let [flipped-board (board/flip-board (board/create-empty))]
+    (is (= (get-in flipped-board [0 0]) {:x 8 :y "H"}))
+    (is (= (get-in flipped-board [7 7]) {:x 1 :y "A"}))
+    (is (= (get-in flipped-board [0 7]) {:x 8 :y "A"}))
+    (is (= (get-in flipped-board [7 0]) {:x 1 :y "H"}))
+    (is (= (get-in flipped-board [1 1]) {:x 7 :y "G"}))
+    (is (= (get-in flipped-board [5 3]) {:x 3 :y "E"}))
+    (is (= (get-in flipped-board [2 4]) {:x 6 :y "D"}))))

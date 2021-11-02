@@ -32,3 +32,7 @@
     (-> board
         (update-in old-pos dissoc :piece)
         (assoc-in (conj new-pos :piece) piece))))
+
+(defn flip-board [board]
+  (vec (reverse (for [row board]
+                  (vec (reverse row))))))
