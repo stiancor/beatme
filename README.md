@@ -1,3 +1,5 @@
+![](https://github.com/stiancor/beatme/workflows/Run%20tests/badge.svg?)
+
 # BeatMe
 
 This is a project where I try to create a chess bot to beat myself at chess. 
