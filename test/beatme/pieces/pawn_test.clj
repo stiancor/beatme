@@ -4,7 +4,7 @@
             [beatme.board :as b]))
 
 (deftest check-pawn-is-allowed-to-move-straight-ahead
-  (let [board (b/create-empty)]
+  (let [board (b/create-empty-board)]
     (testing "When nothing is in front, pawn can move one step"
       (is (pawn/allowed-move? board [0 1] [0 2] :white)))
     (testing "When nothing in front, pawn can move two steps from row two but only row two"
@@ -19,7 +19,7 @@
       (is (not (pawn/allowed-move? board [0 0] [0 -1] :white))))))
 
 (deftest check-pawn-is-allowed-to-capture
-  (let [board (-> (b/create-empty)
+  (let [board (-> (b/create-empty-board)
                   (b/set-piece [3 3] {:type :horse :color :white})
                   (b/set-piece [6 6] {:type :queen :color :black})
                   (b/set-piece [5 4] {:type :pawn :color :white})

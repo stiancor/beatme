@@ -1,12 +1,12 @@
 (ns beatme.board)
 
-(def y-axis (clojure.string/split "ABCDEFGH" #""))
+(def x-axis (clojure.string/split "ABCDEFGH" #""))
 
-(defn create-empty []
+(defn create-empty-board []
   (vec (for [i (range 8)]
          (vec (for [j (range 8)]
-                {:x (inc i)
-                 :y (get y-axis j)})))))
+                {:x (get x-axis i)
+                 :y (inc j)})))))
 
 (defn is-inside-board? [position]
   (let [x (first position)
@@ -19,6 +19,9 @@
 
 (defn square-occupied? [board position]
   (get-piece board position))
+
+(defn square-empty? [board position]
+  (not (get-piece board position)))
 
 (defn square-occupied-by-opponent? [board position player-color]
   (when-let [piece (square-occupied? board position)]
@@ -36,3 +39,7 @@
 (defn flip-board [board]
   (vec (reverse (for [row board]
                   (vec (reverse row))))))
+
+(defn available-square? [board current-player pos final-pos]
+  (or (square-empty? board pos)
+      (when (= pos final-pos) (square-occupied-by-opponent? board pos current-player))))
