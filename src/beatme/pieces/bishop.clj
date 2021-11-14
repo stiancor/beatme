@@ -22,8 +22,7 @@
 
 (defn is-path-open? [board current-player old-pos new-pos]
   (every? true? (for [square (get-travelling-path old-pos new-pos)]
-                  (do (prn square)
-                      (b/available-square? board current-player square new-pos)))))
+                  (b/available-square? board current-player square new-pos))))
 
 (defn allowed-move? [board current-player old-pos new-pos]
   (and (not= old-pos new-pos)
