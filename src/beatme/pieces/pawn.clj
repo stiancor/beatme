@@ -1,6 +1,5 @@
 (ns beatme.pieces.pawn
-  (:require [beatme.board :as b]
-            [beatme.pieces.common :as common]))
+  (:require [beatme.board :as b]))
 
 (defn straight-ahead-move-allowed? [board old-pos new-pos]
   (and (not (b/square-occupied? board new-pos))
@@ -14,7 +13,7 @@
        (= (last old-pos) (dec (last new-pos)))))
 
 (defn allowed-move? [board old-pos new-pos player-color]
-  (and (common/not-same-square? old-pos new-pos)
+  (and (not= old-pos new-pos)
        (b/is-inside-board? new-pos)
        (if (= (first old-pos) (first new-pos))
          (straight-ahead-move-allowed? board old-pos new-pos)

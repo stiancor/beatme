@@ -1,6 +1,5 @@
 (ns beatme.pieces.bishop
-  (:require [beatme.board :as b]
-            [beatme.pieces.common :as common]))
+  (:require [beatme.board :as b]))
 
 (defn is-diagonal-line? [old-pos new-pos]
   (let [x-diff (- (first new-pos) (first old-pos))
@@ -27,7 +26,7 @@
                       (b/available-square? board current-player square new-pos)))))
 
 (defn allowed-move? [board current-player old-pos new-pos]
-  (and (common/not-same-square? old-pos new-pos)
+  (and (not= old-pos new-pos)
        (b/is-inside-board? new-pos)
        (is-diagonal-line? old-pos new-pos)
        (is-path-open? board current-player old-pos new-pos)))

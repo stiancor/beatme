@@ -1,6 +1,5 @@
 (ns beatme.pieces.rook
-  (:require [beatme.board :as b]
-            [beatme.pieces.common :as common]))
+  (:require [beatme.board :as b]))
 
 (defn- define-range [start end]
   (let [is-positive? (> (- end start) 0)]
@@ -22,7 +21,7 @@
                   (b/available-square? board current-player square new-pos))))
 
 (defn allowed-move? [board current-player old-pos new-pos]
-  (and (common/not-same-square? old-pos new-pos)
+  (and (not= old-pos new-pos)
     (b/is-inside-board? new-pos)
        (is-straight-line? old-pos new-pos)
        (is-path-open? board current-player old-pos new-pos)))
