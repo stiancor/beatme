@@ -46,6 +46,8 @@
 
 (deftest testing-all-rook-move-rules
   (let [board (assoc-in (board/create-empty-board) [2 2 :piece] {:color :white :type :queen})]
+    (testing "Cannot move to the same square"
+      (is (not (allowed-move? board :white [4 4] [4 4]))))
     (testing "Must move inside board"
       (is (not (allowed-move? board :white [0 0] [0 8])))
       (is (not (allowed-move? board :white [0 0] [0 -1]))))
