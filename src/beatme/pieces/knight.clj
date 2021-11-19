@@ -19,5 +19,4 @@
 
 (defn allowed-move? [board current-player old-pos new-pos]
   (and (is-possible-move? old-pos new-pos)
-       (b/square-occupied-by-opponent? board new-pos current-player)
-       (b/available-square? board current-player old-pos new-pos)))
+       (b/square-occupied-by-opponent? board new-pos current-player)))
