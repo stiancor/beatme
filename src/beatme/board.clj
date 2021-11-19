@@ -11,8 +11,9 @@
 (defn is-inside-board? [position]
   (let [x (first position)
         y (last position)]
-    (and (>= x 0) (< x 8)
-         (>= y 0) (< y 8))))
+    (when (and (>= x 0) (< x 8)
+             (>= y 0) (< y 8))
+      position)))
 
 (defn get-piece [board position]
   (get-in board (conj position :piece)))
