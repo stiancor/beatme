@@ -43,13 +43,13 @@
     (testing "Must move inside board"
       (is (not (allowed-move? board :white [0 0] [8 8])))
       (is (not (allowed-move? board :white [0 0] [-1 -1]))))
-    (testing "Can only move diagonaly line"
-      (is (not (allowed-move? board :white [0 0] [7 7])))
-      (testing "Can move when path is not blocked"
-        (is (allowed-move? board :white [6 6] [3 3])))
-      (testing "Can not move when path is blocked"
-        (is (not (allowed-move? board :white [7 7] [0 0]))))
-      (testing "Can move when last square has opponent on it"
-        (is (allowed-move? board :black [0 0] [2 2])))
-      (testing "But not when last square has your own piece on it"
-        (is (not (allowed-move? board :white [0 0] [2 2])))))))
+    (testing "Can only move diagonally"
+      (is (not (allowed-move? board :white [0 0] [7 7]))))
+    (testing "Can move when path is not blocked"
+      (is (allowed-move? board :white [6 6] [3 3])))
+    (testing "Can not move when path is blocked"
+      (is (not (allowed-move? board :white [7 7] [0 0]))))
+    (testing "Can move when last square has opponent on it"
+      (is (allowed-move? board :black [0 0] [2 2])))
+    (testing "But not when last square has your own piece on it"
+      (is (not (allowed-move? board :white [0 0] [2 2]))))))
