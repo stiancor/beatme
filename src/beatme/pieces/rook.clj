@@ -22,6 +22,6 @@
 
 (defn allowed-move? [board current-player old-pos new-pos]
   (and (not= old-pos new-pos)
-    (b/is-inside-board? new-pos)
+       (b/is-inside-board? new-pos)
        (is-straight-line? old-pos new-pos)
        (is-path-open? board current-player old-pos new-pos)))
