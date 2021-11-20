@@ -56,7 +56,7 @@
 (defn set-piece [board position piece]
   (assoc-in board (conj position :piece) piece))
 
-(defn get-starting-position []
+(defn starting-position []
   (init-starting-position (create-empty-board)))
 
 (defn is-inside-board? [position]
@@ -92,6 +92,9 @@
 (defn available-square? [board current-player pos final-pos]
   (or (square-empty? board pos)
       (when (= pos final-pos) (square-occupied-by-opponent? board pos current-player))))
+
+(defn find-players-pieces [board current-player]
+  (filter #(and (:piece %) (= (-> % :piece :color) current-player)) (flatten board)))
 
 (defn print-board [board]
   (p/print-board board))

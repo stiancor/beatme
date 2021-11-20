@@ -1,6 +1,7 @@
 (ns beatme.board-test
   (:require [clojure.test :refer :all])
-  (:require [beatme.board :as board]))
+  (:require [beatme.board :as board]
+            [beatme.board :as b]))
 
 (deftest define-board-test
   (let [board (board/create-empty-board)]
@@ -64,3 +65,15 @@
     (is (not (board/available-square? b :white [0 4] [0 4])))
     (is (not (board/available-square? b :black [0 4] [0 5])))
     (is (not (board/available-square? b :white [0 4] [0 5])))))
+
+(deftest find-players-pieces
+  (testing "Verify 16 pieces each in opening"
+    (is (= 16 (count (b/find-players-pieces (board/starting-position) :white))))
+    (is (= 16 (count (b/find-players-pieces (board/starting-position) :black)))))
+  (testing "No pieces on empty board"
+    (is (empty? (b/find-players-pieces (board/create-empty-board) :white)))
+    (is (empty? (b/find-players-pieces (board/create-empty-board) :black))))
+  (testing "One piece is one piece"
+    (is (= 1 (count (b/find-players-pieces
+                      (board/set-piece (board/create-empty-board) [0 2] {:type :pawn :color :white})
+                      :white))))))
