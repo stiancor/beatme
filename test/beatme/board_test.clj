@@ -12,16 +12,16 @@
     (testing "Checking a subset of the generated cells"
       (let [posx0y0 (get-in board [0 0])]
         (is (= (:x posx0y0) "A"))
-        (is (= (:y posx0y0) 1)))
+        (is (= (:y posx0y0) 8)))
       (let [posx7y7 (get-in board [7 7])]
         (is (= (:x posx7y7) "H"))
-        (is (= (:y posx7y7) 8)))
+        (is (= (:y posx7y7) 1)))
       (let [posx3y2 (get-in board [3 2])]
-        (is (= (:x posx3y2) "D"))
-        (is (= (:y posx3y2) 3)))
+        (is (= (:x posx3y2) "C"))
+        (is (= (:y posx3y2) 5)))
       (let [posx5y6 (get-in board [5 6])]
-        (is (= (:x posx5y6) "F"))
-        (is (= (:y posx5y6) 7))))))
+        (is (= (:x posx5y6) "G"))
+        (is (= (:y posx5y6) 3))))))
 
 (deftest check-if-position-inside-board
   (is (board/is-inside-board? [0 0]))
@@ -50,13 +50,13 @@
 
 (deftest test-flip-board
   (let [flipped-board (board/flip-board (board/create-empty-board))]
-    (is (= (get-in flipped-board [0 0]) {:x "H" :y 8}))
-    (is (= (get-in flipped-board [7 7]) {:x "A" :y 1}))
-    (is (= (get-in flipped-board [0 7]) {:x "H" :y 1}))
-    (is (= (get-in flipped-board [7 0]) {:x "A" :y 8}))
-    (is (= (get-in flipped-board [1 1]) {:x "G" :y 7}))
-    (is (= (get-in flipped-board [5 3]) {:x "C" :y 5}))
-    (is (= (get-in flipped-board [2 4]) {:x "F" :y 4}))))
+    (is (= (get-in flipped-board [0 0]) {:x "H" :y 1}))
+    (is (= (get-in flipped-board [7 7]) {:x "A" :y 8}))
+    (is (= (get-in flipped-board [0 7]) {:x "A" :y 1}))
+    (is (= (get-in flipped-board [7 0]) {:x "H" :y 8}))
+    (is (= (get-in flipped-board [1 1]) {:x "G" :y 2}))
+    (is (= (get-in flipped-board [5 3]) {:x "E" :y 6}))
+    (is (= (get-in flipped-board [2 4]) {:x "D" :y 3}))))
 
 (deftest test-available-square?
   (let [b (assoc-in (board/create-empty-board) [0 4 :piece] {:color :white :type :pawn})]
