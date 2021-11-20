@@ -1,15 +1,7 @@
-(ns beatme.board)
+(ns beatme.board
+  (:require [beatme.printer :as p]))
 
-(def x-axis-notation (clojure.string/split "ABCDEFGH" #""))
-
-(defn create-empty-board []
-  (vec (for [i (range 7 -1 -1)]
-         (vec (for [j (range 8)]
-                {:x (get x-axis-notation j)
-                 :y (inc i) })))))
-
-(defn set-piece [board position piece]
-  (assoc-in board (conj position :piece) piece))
+(def ^:private x-axis-notation (clojure.string/split "ABCDEFGH" #""))
 
 (defn- init-rooks [b]
   (-> b
@@ -46,7 +38,7 @@
   (let [b (reduce #(assoc-in %1 [1 %2 :piece] {:type :pawn :color :black}) b (range 8))]
     (reduce #(assoc-in %1 [6 %2 :piece] {:type :pawn :color :white}) b (range 8))))
 
-(defn init-starting-position [b]
+(defn- init-starting-position [b]
   (-> b
       init-rooks
       init-knights
@@ -55,31 +47,17 @@
       init-kings
       init-pawns))
 
+(defn create-empty-board []
+  (vec (for [i (range 7 -1 -1)]
+         (vec (for [j (range 8)]
+                {:x (get x-axis-notation j)
+                 :y (inc i) })))))
+
+(defn set-piece [board position piece]
+  (assoc-in board (conj position :piece) piece))
+
 (defn get-starting-position []
   (init-starting-position (create-empty-board)))
-
-(defn get-square-str [square]
-  (let [type (-> square :piece :type)
-        color (-> square :piece :color)
-        v (cond (= type :pawn) (if (= color :white) "♙" "♟︎")
-                (= type :rook) (if (= color :white) "♖" "♜")
-                (= type :bishop) (if (= color :white) "♗" "♝")
-                (= type :knight) (if (= color :white) "♘" "♞")
-                (= type :queen) (if (= color :white) "♕" "♛")
-                (= type :king) (if (= color :white) "♔" "♚")
-                :else " ")]
-    (str " " v " ")))
-
-(defn print-board [board]
-  (clojure.pprint/pprint
-    (vec (for [row board]
-           (reduce #(str %1 (get-square-str %2)) "" row)))))
-
-(defn print-board-with-notation [board]
-  (clojure.pprint/pprint
-    (conj (vec (for [row board]
-                 (str (-> row first :y) (reduce #(str %1 (get-square-str %2)) "" row))))
-          (str (reduce #(str %1 " " (-> %2 :x) " ") " " (first board))))))
 
 (defn is-inside-board? [position]
   (let [x (first position)
@@ -114,3 +92,9 @@
 (defn available-square? [board current-player pos final-pos]
   (or (square-empty? board pos)
       (when (= pos final-pos) (square-occupied-by-opponent? board pos current-player))))
+
+(defn print-board [board]
+  (p/print-board board))
+
+(defn print-board-with-notation [board]
+  (p/print-board-with-notation board))
