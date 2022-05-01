@@ -1,25 +1,17 @@
 (ns beatme.pieces.queen
-  (:require [beatme.pieces.rook :as r]
-            [beatme.pieces.bishop :as b]
-            [beatme.board :as board]))
+  (:require [beatme.pieces.sliding-piece :as sp]))
 
-(defn possible-queen-moves [old-pos]
-  (concat [(partition 2 (interleave (range (dec (first old-pos)) -1 -1) (range (dec (second old-pos)) -1 -1)))]
-          [(partition 2 (interleave (range (dec (first old-pos)) -1 -1) (repeat (second old-pos))))]
-          [(partition 2 (interleave (range (dec (first old-pos)) -1 -1) (range (inc (second old-pos)) 8)))]
-          [(partition 2 (interleave (repeat (first old-pos)) (range (dec (second old-pos)) -1 -1)))]
-          [(partition 2 (interleave (range (inc (first old-pos)) 8) (range (dec (second old-pos)) -1 -1)))]
-          [(partition 2 (interleave (range (inc (first old-pos)) 8) (repeat (second old-pos))))]
-          [(partition 2 (interleave (range (inc (first old-pos)) 8) (range (inc (second old-pos)) 8)))]
-          [(partition 2 (interleave (repeat (first old-pos)) (range (inc (second old-pos)) 8)))]))
+(def directions [{:dir :north-west :offset -9}
+                 {:dir :north-east :offset -7}
+                 {:dir :south-east :offset 9}
+                 {:dir :south-west :offset 7}
+                 {:dir :north :offset -8}
+                 {:dir :east :offset 1}
+                 {:dir :west :offset -1}
+                 {:dir :south :offset 8}])
 
-(defn move-allowed? [board current-player old-pos new-pos]
-  (and (not= old-pos new-pos)
-       (board/is-inside-board? new-pos)
-       (or (and (r/is-straight-line? old-pos new-pos)
-                (r/is-path-open? board current-player old-pos new-pos))
-           (and (b/is-diagonal-line? old-pos new-pos)
-                (b/is-path-open? board current-player old-pos new-pos)))))
+(defn find-all-legal-moves [board pos]
+  (sp/find-all-legal-moves board pos directions))
 
 
 

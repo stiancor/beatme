@@ -1,22 +1,29 @@
 (ns beatme.pieces.knight
-  (:require [beatme.board :as b]))
+  (:require [beatme.board :as b]
+            [beatme.pieces :as p]))
 
-(defn possible-moves [[a b]]
-  (filter b/is-inside-board?
-          [[(- a 1) (- b 2)]
-           [(- a 1) (+ b 2)]
-           [(- a 2) (- b 1)]
-           [(- a 2) (+ b 1)]
-           [(+ a 1) (- b 2)]
-           [(+ a 1) (+ b 2)]
-           [(+ a 2) (- b 1)]
-           [(+ a 2) (+ b 1)]]))
+(defonce move-template
+         [{:diff 17 :x 1 :y 2}
+          {:diff 10 :x 2 :y 1}
+          {:diff -6 :x 2 :y -1}
+          {:diff -15 :x 1 :y -2}
+          {:diff -17 :x -1 :y -2}
+          {:diff -10 :x -2 :y -1}
+          {:diff 6 :x -2 :y 1}
+          {:diff 15 :x -1 :y 2}])
 
-(defn is-possible-move? "Only checks that the knight moves according to its bounds.
- Not checking if the destination square is occupied"
-  [old-pos new-pos]
-  (some #(= % new-pos) (possible-moves old-pos)))
+(defn get-east-west [d]
+  (if (pos-int? d) :east :west))
 
-(defn allowed-move? [board current-player old-pos new-pos]
-  (and (is-possible-move? old-pos new-pos)
-       (b/square-occupied-by-opponent? board new-pos current-player)))
+(defn get-north-south [d]
+  (if (pos-int? d) :south :north))
+
+(defn find-all-legal-moves [board pos]
+  (let [square (b/square-info pos)]
+    (remove nil?
+            (for [m move-template]
+              (when (and (>= ((get-east-west (:x m)) square) (abs (:x m)))
+                         (>= ((get-north-south (:y m)) square) (abs (:y m)))
+                         (or (= (get board (+ pos (:diff m))) p/none)
+                             (not (p/is-friendly? (get board pos) (get board (+ pos (:diff m)))))))
+                (+ pos (:diff m)))))))

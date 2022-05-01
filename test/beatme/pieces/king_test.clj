@@ -1,24 +1,36 @@
 (ns beatme.pieces.king-test
   (:require [clojure.test :refer :all])
   (:require [beatme.pieces.king :as k]
-            [beatme.board :as b]))
+            [beatme.board :as b]
+            [beatme.pieces :as p]))
 
-(deftest possible-king-moves-test
-  (let [board (-> (b/create-empty-board)
-                  (assoc-in [2 2 :piece] {:color :white :type :pawn})
-                  (assoc-in [6 7 :piece] {:color :black :type :pawn}))]
-    (is (= 8 (count (k/possible-king-moves [4 4]))))
-    (is (k/is-possible-move? [4 4] [3 3]))
-    (is (k/is-possible-move? [4 4] [3 4]))
-    (is (k/is-possible-move? [4 4] [3 5]))
-    (is (k/is-possible-move? [4 4] [4 3]))
-    (is (k/is-possible-move? [4 4] [4 5]))
-    (is (k/is-possible-move? [4 4] [5 3]))
-    (is (k/is-possible-move? [4 4] [5 4]))
-    (is (k/is-possible-move? [4 4] [5 5]))
-    (is (not (k/is-possible-move? [4 4] [5 6])))
-    (is (not (k/is-possible-move? [4 4] [6 6])))
-    (testing "Capturing opponent is allowed"
-      (is (k/allowed-move? board :white [6 6] [6 7])))
-    (testing "Capture your own pieces is not allowed"
-      (is (not (k/allowed-move? board :white [3 3] [2 2]))))))
+(deftest possible-king-moves-in-the-corner
+  (let [game {:board (-> (b/create-empty-board)
+                         (assoc (b/to-position "H1") (+ p/white p/king)))
+              :turn :w}]
+    (is (= (b/to-positions "H2" "G1" "G2")
+           (set (k/find-all-legal-moves game (b/to-position "H1")))))))
+
+(deftest possible-king-move-when-every-direction-is-free
+  (let [game {:board (-> (b/create-empty-board)
+                         (assoc (b/to-position "D4") (+ p/white p/king)))
+              :turn :w}]
+    (is (= (b/to-positions "E3" "E4" "E5" "D3" "D5" "C3" "C4" "C5")
+           (set (k/find-all-legal-moves game (b/to-position "D4")))))))
+
+(deftest possible-king-move-when-opponent-can-be-captured
+  (let [game {:board (-> (b/create-empty-board)
+                         (assoc (b/to-position "D4") (+ p/white p/king))
+                         (assoc (b/to-position "D5") (+ p/black p/knight)))
+              :turn :w}]
+    (is (= (b/to-positions "E3" "E4" "E5" "D3" "D5" "C3" "C4" "C5")
+           (set (k/find-all-legal-moves game (b/to-position "D4")))))))
+
+(deftest possible-king-move-when-friendly-on-the-side
+  (let [game {:board (-> (b/create-empty-board)
+                         (assoc (b/to-position "D4") (+ p/white p/king))
+                         (assoc (b/to-position "D5") (+ p/white p/knight)))
+              :turn :w}]
+    (is (= (b/to-positions "E3" "E4" "E5" "D3" "C3" "C4" "C5")
+           (set (k/find-all-legal-moves game (b/to-position "D4")))))))
+                              

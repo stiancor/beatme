@@ -1,20 +1,43 @@
 (ns beatme.pieces.pawn
-  (:require [beatme.board :as b]))
+  (:require [beatme.pieces :as p]))
 
-(defn straight-ahead-move-allowed? [board old-pos new-pos]
-  (and (not (b/square-occupied? board new-pos))
-       (= (first old-pos) (first new-pos))
-       (> (last new-pos) (last old-pos))
-       (< (- (last new-pos) (last old-pos)) (if (= 1 (last old-pos)) 3 2))))
+(defn is-black-on-second-row? [start-pos]
+  (and (>= start-pos 8) (<= start-pos 15)))
 
-(defn capture-move-allowed? [board old-pos new-pos player-color]
-  (and (b/square-occupied-by-opponent? board new-pos player-color)
-       (#{(dec (first old-pos)) (inc (first old-pos))} (first new-pos))
-       (= (last old-pos) (dec (last new-pos)))))
+(defn is-white-on-second-row? [start-pos]
+  (and (>= start-pos 48) (<= start-pos 55)))
 
-(defn allowed-move? [board old-pos new-pos player-color]
-  (and (not= old-pos new-pos)
-       (b/is-inside-board? new-pos)
-       (if (= (first old-pos) (first new-pos))
-         (straight-ahead-move-allowed? board old-pos new-pos)
-         (capture-move-allowed? board old-pos new-pos player-color))))
+(defn find-forward-moves [game start-pos operator]
+  (when (= p/none (get-in game [:board (operator start-pos 8)]))
+    (if (and (if (= :w (:turn game)) (is-white-on-second-row? start-pos)
+                                     (is-black-on-second-row? start-pos))
+             (= p/none (get-in game [:board (operator start-pos 16)])))
+      [(operator start-pos 8) (operator start-pos 16)]
+      [(operator start-pos 8)])))
+
+(defn can-capture-left?
+  [game start-pos operator]
+  (or (= (:en-pessant game) (operator start-pos 9))
+      (and (not= 0 (mod start-pos 8))
+           (not= p/none (get-in game [:board (operator start-pos 9)]))
+           (if (> (get-in game [:board start-pos]) p/black)
+             (< (get-in game [:board (operator start-pos 9)]) p/black)
+             (> (get-in game [:board (operator start-pos 9)]) p/black)))))
+
+(defn can-capture-right?
+  [game start-pos operator]
+  (or (= (:en-pessant game) (operator start-pos 7))
+      (and (not= 7 (mod start-pos 8))
+           (not= p/none (get-in game [:board (operator start-pos 7)]))
+           (if (> (get-in game [:board start-pos]) p/black)
+             (< (get-in game [:board (operator start-pos 7)]) p/black)
+             (> (get-in game [:board (operator start-pos 7)]) p/black)))))
+
+(defn find-capture-moves [game start-pos operator]
+  (remove nil? [(when (can-capture-left? game start-pos operator) (operator start-pos 9))
+                (when (can-capture-right? game start-pos operator) (operator start-pos 7))]))
+
+(defn find-all-legal-moves
+  ([game start-pos]
+   (concat (find-forward-moves game start-pos (if (= (:turn game) :w) - +))
+           (find-capture-moves game start-pos (if (= (:turn game) :w) - +)))))
