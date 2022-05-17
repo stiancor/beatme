@@ -51,7 +51,7 @@
     (testing "No moves since last capture"
       (is (= 0 (:moves-since-last-capture game))))
     (testing "Verify that both side are allowed to castle king and queen side"
-      (is (-> game :white :castle-king-side?))
-      (is (-> game :white :castle-queen-side?))
-      (is (-> game :black :castle-king-side?))
-      (is (-> game :black :castle-queen-side?)))))
+      (is (-> game :w :castle-king-side?))
+      (is (-> game :w :castle-queen-side?))
+      (is (-> game :b :castle-king-side?))
+      (is (-> game :b :castle-queen-side?)))))

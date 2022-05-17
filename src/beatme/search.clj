@@ -18,6 +18,26 @@
       (= p/queen piece) (queen/find-all-legal-moves (:board game) pos)
       (= p/king piece) (king/find-all-legal-moves game pos))))
 
+(defn can-castle-queenside? [game a-file-index]
+  (when
+    (and (:castle-queen-side? (get game (:turn game)))
+         (= p/none (get-in game [:board (+ 1 a-file-index)]))
+         (= p/none (get-in game [:board (+ 2 a-file-index)]))
+         (= p/none (get-in game [:board (+ 3 a-file-index)])))
+    :queenside-castle))
+
+(defn can-castle-kingside? [game a-file-index]
+  (when
+    (and (:castle-king-side? (get game (:turn game)))
+         (= p/none (get-in game [:board (+ 5 a-file-index)]))
+         (= p/none (get-in game [:board (+ 6 a-file-index)])))
+    :kingside-castle))
+
+(defn find-castle-moves [game]
+  (filterv some?
+           [(can-castle-queenside? game (if (= :w (:turn game)) 56 0))
+            (can-castle-kingside? game (if (= :w (:turn game)) 56 0))]))
+
 (defn search [game depth max-depth]
   (if (< depth max-depth)
     (map-indexed (fn [idx square]
