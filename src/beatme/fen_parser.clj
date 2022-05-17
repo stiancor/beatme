@@ -11,8 +11,8 @@
 (defn- init-game-state [fen]
   (let [state (rest (str/split fen #" "))]
     {:turn (-> state first keyword)
-     :white (resolve-castle-rights (re-find #"[K|Q]+" (second state)))
-     :black (resolve-castle-rights (re-find #"[k|q]+" (second state)))
+     :w (resolve-castle-rights (re-find #"[K|Q]+" (second state)))
+     :b (resolve-castle-rights (re-find #"[k|q]+" (second state)))
      :en-passant (->> state (drop 2) first)
      :moves-since-last-capture (->> state (drop 3) first Integer/parseInt)
      :move-number (-> state last Integer/parseInt)}))
