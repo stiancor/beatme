@@ -7,7 +7,18 @@
 
 (deftest find-all-moves-test
   (testing "All possible moves for white is 20 on first turn"
-    (is (= 20 (->> (search/search (fen-p/init-starting-position) 0 1)
+    (is (= 20 (->> (search/search {:game (fen-p/init-starting-position)
+                                   :depth 0
+                                   :max-depth 1})
+                   (remove empty?)
+                   (map count)
+                   (apply +))))))
+
+(deftest find-all-moves-test
+  (testing "All possible moves for black is 20 on first turn"
+    (is (= 20 (->> (search/search {:game (assoc (fen-p/init-starting-position) :turn :b)
+                                   :depth 0
+                                   :max-depth 1})
                    (remove empty?)
                    (map count)
                    (apply +))))))

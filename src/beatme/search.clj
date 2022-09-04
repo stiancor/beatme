@@ -38,11 +38,11 @@
            [(can-castle-queenside? game (if (= :w (:turn game)) 56 0))
             (can-castle-kingside? game (if (= :w (:turn game)) 56 0))]))
 
-(defn search [game depth max-depth]
+(defn search [{:keys [game depth max-depth]}]
   (if (< depth max-depth)
     (map-indexed (fn [idx square]
                    (cond (= square p/none) nil
-                         (and (= (:turn game) :w) (not (p/is-black? square))) (find-all-moves game square idx)
-                         (and (= (:turn game) :b) (p/is-white? square)) (find-all-moves game square idx)
+                         (and (= (:turn game) :w) (p/is-white? square)) (find-all-moves game square idx)
+                         (and (= (:turn game) :b) (p/is-black? square)) (find-all-moves game square idx)
                          :else nil)) (:board game))
     game))
